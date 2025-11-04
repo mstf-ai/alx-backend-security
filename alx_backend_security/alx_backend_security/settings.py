@@ -7,7 +7,7 @@ from pathlib import Path
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-SECRET_KEY = 'django-insecure-change-this-key'  # غيّرها في بيئة الإنتاج
+SECRET_KEY = 'django-insecure-change-this-key'  # غيّرها قبل الإنتاج
 
 DEBUG = True
 
@@ -25,12 +25,13 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'ip_tracking',  # تطبيق تتبع الـ IP
+    'ip_tracking',         # تطبيق تتبع الـ IP
+    'django_ratelimit',    # مكتبة rate limiting
 ]
 
 
 # =========================================
-# ⚙️ Middleware (بما فيهم نظام تتبع IP)
+# ⚙️ Middleware
 # =========================================
 
 MIDDLEWARE = [
@@ -114,19 +115,27 @@ STATIC_URL = 'static/'
 
 
 # =========================================
-# 💾 نظام الكاش (لجلب بيانات الجغرافيا)
+# 💾 نظام الكاش للتطوير المحلي (LocMemCache)
 # =========================================
 
 CACHES = {
-    'default': {
-        'BACKEND': 'django.core.cache.backends.locmem.LocMemCache',
-        'LOCATION': 'geo_cache',
+    "default": {
+        "BACKEND": "django.core.cache.backends.locmem.LocMemCache",
+        "LOCATION": "unique-snowflake",
     }
 }
 
 
 # =========================================
-# ✅ إعدادات إضافية أثناء التطوير
+# 🟢 إعدادات rate limiting (مؤقت بدون Redis)
+# =========================================
+
+RATELIMIT_ENABLE = False   # مؤقتًا لتجنب مشاكل LocMemCache
+RATELIMIT_USE_CACHE = "default"
+
+
+# =========================================
+# ✅ إعدادات إضافية
 # =========================================
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
