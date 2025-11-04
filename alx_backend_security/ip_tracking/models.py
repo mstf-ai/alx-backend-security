@@ -1,4 +1,3 @@
-# ip_tracking/models.py
 from django.db import models
 
 class RequestLog(models.Model):
